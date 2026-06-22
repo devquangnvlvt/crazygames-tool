@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcadeBox - Offline Web Game Downloader</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-gamepad logo-icon"></i>
+                <h1>Arcade<span>Box</span></h1>
+            </div>
+            <div class="subtitle">Download & Play CrazyGames Offline</div>
+        </header>
+
+        <!-- Downloader Section -->
+        <section class="downloader-card">
+            <h2><i class="fa-solid fa-cloud-arrow-down"></i> Download New Game</h2>
+            <p class="description">Enter any CrazyGames link to download all game assets automatically for offline play.</p>
+            <form id="download-form" class="input-group">
+                <input type="url" id="game-url" placeholder="https://www.crazygames.com/game/ragdoll-archers" required autocomplete="off">
+                <button type="submit" id="download-btn">
+                    <i class="fa-solid fa-circle-down"></i> Download
+                </button>
+            </form>
+        </section>
+
+        <!-- Active Download Progress Window (Hidden by default) -->
+        <section id="active-download-section" class="download-progress-card hidden">
+            <div class="card-header">
+                <h3><i class="fa-solid fa-spinner fa-spin text-primary"></i> <span id="download-game-title">Ragdoll Archers</span></h3>
+                <span id="download-percentage">0%</span>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="console-wrapper">
+                <div class="console-header">
+                    <span><i class="fa-solid fa-terminal"></i> Crawler Log Console</span>
+                    <button id="toggle-console" class="btn-icon"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <div id="console-logs" class="console-logs">
+                    <!-- Logs stream in here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Library Section -->
+        <section class="library-section">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-folder-open"></i> My Arcade Library</h2>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="library-search" placeholder="Search library...">
+                </div>
+            </div>
+            
+            <div id="no-games-view" class="no-games-container hidden">
+                <i class="fa-solid fa-ghost empty-icon"></i>
+                <h3>Your Library is Empty</h3>
+                <p>Paste a game link above and hit Download to start building your offline arcade.</p>
+            </div>
+
+            <div id="games-grid" class="games-grid">
+                <!-- Games cards loaded via JS -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Game Player Modal (Full Screen) -->
+    <div id="player-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-game-title">Game Title</h2>
+                <div class="modal-controls">
+                    <button id="fullscreen-game-btn" class="btn-modal" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                    <button id="close-modal-btn" class="btn-modal btn-close" title="Close Game"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="game-viewport">
+                <iframe id="game-iframe" src="" frameborder="0" allow="autoplay; gamepad; fullscreen; keyboard" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

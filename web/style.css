@@ -1,0 +1,565 @@
+:root {
+    --bg-base: #0b0f19;
+    --bg-surface: #131a2b;
+    --bg-surface-glow: #1a243c;
+    --color-primary: #6366f1;
+    --color-primary-glow: rgba(99, 102, 241, 0.4);
+    --color-success: #10b981;
+    --color-error: #f43f5e;
+    --color-text-main: #f3f4f6;
+    --color-text-muted: #9ca3af;
+    --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --border-radius-lg: 16px;
+    --border-radius-md: 10px;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-base);
+    background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+    color: var(--color-text-main);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    overflow-y: scroll;
+}
+
+.app-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+header .logo-icon {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    filter: drop-shadow(0 0 8px var(--color-primary-glow));
+    animation: pulse 3s infinite ease-in-out;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+}
+
+header h1 span {
+    color: var(--color-primary);
+    text-shadow: 0 0 10px var(--color-primary-glow);
+}
+
+header .subtitle {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+/* Cards layout */
+.downloader-card, .download-progress-card, .library-section {
+    background-color: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* Downloader Section */
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+h2 i {
+    color: var(--color-primary);
+}
+
+.description {
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.input-group input {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
+    padding: 1rem 1.25rem;
+    color: var(--color-text-main);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.input-group input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+button {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.85rem 1.75rem;
+    border-radius: var(--border-radius-md);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition-smooth);
+}
+
+#download-btn {
+    background-color: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+#download-btn:hover {
+    background-color: #5558e6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+}
+
+#download-btn:active {
+    transform: translateY(0);
+}
+
+/* Download Progress Card */
+.download-progress-card {
+    border-left: 4px solid var(--color-primary);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.card-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#download-percentage {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.progress-container {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background-image: linear-gradient(90deg, var(--color-primary) 0%, #a855f7 100%);
+    border-radius: 5px;
+    transition: width 0.4s ease-out;
+    box-shadow: 0 0 10px var(--color-primary-glow);
+}
+
+/* Console Logs styling */
+.console-wrapper {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-md);
+    background-color: #05070c;
+    overflow: hidden;
+}
+
+.console-header {
+    background-color: rgba(255, 255, 255, 0.02);
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.console-header span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.console-logs {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #4ade80; /* matrix green */
+    padding: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.console-logs div {
+    word-break: break-all;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    padding: 0.25rem;
+    cursor: pointer;
+}
+
+.btn-icon:hover {
+    color: var(--color-text-main);
+}
+
+/* Library Section Header */
+.library-section {
+    padding-bottom: 3rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1rem;
+}
+
+.search-box {
+    position: relative;
+    max-width: 300px;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+}
+
+.search-box input {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-md);
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    color: var(--color-text-main);
+    font-family: var(--font-sans);
+    outline: none;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+}
+
+.search-box input:focus {
+    border-color: var(--color-primary);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Empty View */
+.no-games-container {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--color-text-muted);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.no-games-container h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-main);
+}
+
+/* Games Grid & Cards */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.game-card {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 102, 241, 0.1);
+}
+
+.card-thumbnail {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    background-color: #080a10;
+    overflow: hidden;
+}
+
+.card-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.game-card:hover .card-thumbnail img {
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.card-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-play {
+    flex: 1;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.btn-play:hover {
+    background-color: #5558e6;
+    box-shadow: 0 0 12px var(--color-primary-glow);
+}
+
+.btn-delete {
+    background-color: rgba(244, 63, 94, 0.1);
+    color: var(--color-error);
+    padding: 0.6rem 0.85rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+.btn-delete:hover {
+    background-color: var(--color-error);
+    color: #fff;
+    border-color: var(--color-error);
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.modal-backdrop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(5, 7, 12, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-lg);
+    width: 90%;
+    max-width: 960px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    z-index: 101;
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal:not(.hidden) .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-header h2 {
+    font-size: 1.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.modal-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-modal {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--color-text-main);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-modal:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-close:hover {
+    background-color: var(--color-error);
+    border-color: var(--color-error);
+    color: #fff;
+}
+
+.game-viewport {
+    flex: 1;
+    background-color: #000;
+    position: relative;
+}
+
+.game-viewport iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Helper Utilities */
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: none !important;
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 8px var(--color-primary-glow));
+    }
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.6));
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .input-group {
+        flex-direction: column;
+    }
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    #download-percentage {
+        align-self: flex-end;
+    }
+}

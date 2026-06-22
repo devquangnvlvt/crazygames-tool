@@ -1,0 +1,20 @@
+{
+  "games": [
+    {
+      "slug": "ragdoll-archers",
+      "name": "Ragdoll Archers",
+      "thumbnail": "/games/ragdoll-archers/thumbnail.jpg",
+      "url": "/games/ragdoll-archers/index.html",
+      "size_mb": 6.55,
+      "date_added": "2026-06-22 16:14"
+    },
+    {
+      "slug": "fashion-store-shop-tycoon",
+      "name": "Fashion Store: Shop Tycoon",
+      "thumbnail": "/games/fashion-store-shop-tycoon/thumbnail.jpg",
+      "url": "/games/fashion-store-shop-tycoon/index.html",
+      "size_mb": 48.76,
+      "date_added": "2026-06-22 16:15"
+    }
+  ]
+}
