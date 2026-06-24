@@ -23,9 +23,72 @@ const fullscreenGameBtn = document.getElementById('fullscreen-game-btn');
 let currentTaskId = null;
 let pollInterval = null;
 let allGames = [];
+let backendUrl = ''; // Auto-discovered backend host
+
+// Backend Auto-Discovery for Cross-Origin / Live-Server setups
+async function discoverBackend() {
+    const ports = ['8000', '8080', '8888', '5000', '3000'];
+    
+    // If running directly on one of our backend ports, use relative URLs
+    if (ports.includes(window.location.port)) {
+        backendUrl = '';
+        return;
+    }
+    
+    // Try to locate the backend by sending small test requests to candidates
+    for (const port of ports) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 200);
+            const response = await fetch(`http://localhost:${port}/api/games`, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (response.ok) {
+                backendUrl = `http://localhost:${port}`;
+                console.log(`Discovered ArcadeBox backend at: ${backendUrl}`);
+                return;
+            }
+        } catch (err) {
+            // Port not open or CORS failed, try next
+        }
+    }
+    
+    // If not found, log warning
+    if (window.location.protocol.startsWith('http')) {
+        console.warn('Could not connect to ArcadeBox server. Ensure server.py is running.');
+    }
+}
+
+// Unified API caller with response verification
+async function apiRequest(path) {
+    const url = `${backendUrl}${path}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            let errorMsg = `HTTP Error ${response.status}`;
+            try {
+                const errData = await response.json();
+                if (errData && errData.error) errorMsg = errData.error;
+            } catch (_) {}
+            throw new Error(errorMsg);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(`API Request to ${url} failed:`, error);
+        throw error;
+    }
+}
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Show a loading indicator inside the games grid while discovering backend
+    gamesGrid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1rem;"></i>
+            <p style="color: var(--color-text-muted);">Connecting to ArcadeBox Backend...</p>
+        </div>
+    `;
+
+    await discoverBackend();
     loadLibrary();
     
     // Toggle log console height/collapse
@@ -43,11 +106,24 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load Games Library
 async function loadLibrary() {
     try {
-        const response = await fetch('/api/games');
-        allGames = await response.json();
+        allGames = await apiRequest('/api/games');
         renderLibrary(allGames);
     } catch (error) {
         console.error('Failed to load games list:', error);
+        noGamesView.classList.add('hidden');
+        gamesGrid.classList.remove('hidden');
+        gamesGrid.innerHTML = `
+            <div class="error-container" style="grid-column: 1/-1; text-align: center; padding: 2rem; background: rgba(244, 63, 94, 0.1); border: 1px solid var(--color-error); border-radius: var(--border-radius-md);">
+                <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: var(--color-error); margin-bottom: 0.5rem;"></i>
+                <h3 style="color: var(--color-error);">Connection Error</h3>
+                <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                    Could not connect to the ArcadeBox server. Make sure <code>python server.py</code> is running, then click the retry button.
+                </p>
+                <button onclick="loadLibrary()" style="margin-top: 1rem; background: var(--color-primary); box-shadow: 0 0 10px var(--color-primary-glow); border: none; color: white; padding: 0.5rem 1rem; border-radius: var(--border-radius-md); cursor: pointer; font-family: var(--font-sans); font-weight: 600; transition: var(--transition-smooth);">
+                    <i class="fa-solid fa-rotate"></i> Retry Connection
+                </button>
+            </div>
+        `;
     }
 }
 
@@ -69,9 +145,13 @@ function renderLibrary(games) {
         card.className = 'game-card';
         card.setAttribute('data-name', game.name.toLowerCase());
         
+        // Handle local paths correctly if backendUrl is set
+        const thumbnailSrc = game.thumbnail.startsWith('/') && backendUrl ? `${backendUrl}${game.thumbnail}` : game.thumbnail;
+        const playUrl = game.url.startsWith('/') && backendUrl ? `${backendUrl}${game.url}` : game.url;
+        
         card.innerHTML = `
             <div class="card-thumbnail">
-                <img src="${game.thumbnail}" onerror="this.src='/web/assets/default_thumb.png';">
+                <img src="${thumbnailSrc}" onerror="this.src='assets/default_thumb.png';">
             </div>
             <div class="card-content">
                 <h4>${game.name}</h4>
@@ -80,7 +160,7 @@ function renderLibrary(games) {
                     <span><i class="fa-solid fa-calendar-days"></i> ${game.date_added}</span>
                 </div>
                 <div class="card-actions">
-                    <button class="btn-play" onclick="playGame('${game.url}', '${game.name.replace(/'/g, "\\'")}')">
+                    <button class="btn-play" onclick="playGame('${playUrl}', '${game.name.replace(/'/g, "\\'")}')">
                         <i class="fa-solid fa-circle-play"></i> Play Offline
                     </button>
                     <button class="btn-delete" onclick="deleteGame('${game.slug}', '${game.name.replace(/'/g, "\\'")}')" title="Delete Game">
@@ -111,8 +191,7 @@ downloadForm.addEventListener('submit', async (e) => {
     downloadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Triggering...';
     
     try {
-        const response = await fetch(`/api/download?url=${encodeURIComponent(url)}`);
-        const result = await response.json();
+        const result = await apiRequest(`/api/download?url=${encodeURIComponent(url)}`);
         
         if (result.status === 'started') {
             currentTaskId = result.task_id;
@@ -135,7 +214,7 @@ downloadForm.addEventListener('submit', async (e) => {
             resetDownloadButton();
         }
     } catch (error) {
-        alert('Network error trying to connect to download API.');
+        alert('Failed to start download: ' + error.message);
         resetDownloadButton();
     }
 });
@@ -151,8 +230,7 @@ function startPolling(taskId) {
     
     pollInterval = setInterval(async () => {
         try {
-            const response = await fetch(`/api/status?task_id=${taskId}`);
-            const status = await response.json();
+            const status = await apiRequest(`/api/status?task_id=${taskId}`);
             
             if (status.error) {
                 clearInterval(pollInterval);
@@ -188,6 +266,7 @@ function startPolling(taskId) {
             }
         } catch (error) {
             console.error('Polling error:', error);
+            appendLog(`WARNING: Connection lost to status API. Retrying... (${error.message})`);
         }
     }, 800);
 }
@@ -241,14 +320,13 @@ async function deleteGame(slug, name) {
     if (!confirmed) return;
     
     try {
-        const response = await fetch(`/api/delete?slug=${slug}`);
-        const result = await response.json();
+        const result = await apiRequest(`/api/delete?slug=${slug}`);
         if (result.success) {
             loadLibrary();
         } else {
             alert('Failed to delete game from directory.');
         }
     } catch (error) {
-        alert('Network error trying to delete game.');
+        alert('Failed to delete game: ' + error.message);
     }
 }

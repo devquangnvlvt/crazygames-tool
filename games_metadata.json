@@ -9,12 +9,52 @@
       "date_added": "2026-06-22 16:14"
     },
     {
+      "slug": "traffic-rider-vvq",
+      "name": "Traffic Rider",
+      "thumbnail": "/games/traffic-rider-vvq/thumbnail.jpg",
+      "url": "/games/traffic-rider-vvq/index.html",
+      "size_mb": 132.88,
+      "date_added": "2026-06-22 17:33"
+    },
+    {
+      "slug": "find-me-lost-objects",
+      "name": "Find Me: Lost Objects",
+      "thumbnail": "/games/find-me-lost-objects/thumbnail.jpg",
+      "url": "/games/find-me-lost-objects/index.html",
+      "size_mb": 90.24,
+      "date_added": "2026-06-22 17:35"
+    },
+    {
+      "slug": "find-it-hidden-object-puzzle",
+      "name": "Find It: Hidden Object Puzzle",
+      "thumbnail": "/games/find-it-hidden-object-puzzle/thumbnail.jpg",
+      "url": "/games/find-it-hidden-object-puzzle/index.html",
+      "size_mb": 246.99,
+      "date_added": "2026-06-24 09:13"
+    },
+    {
       "slug": "fashion-store-shop-tycoon",
       "name": "Fashion Store: Shop Tycoon",
       "thumbnail": "/games/fashion-store-shop-tycoon/thumbnail.jpg",
       "url": "/games/fashion-store-shop-tycoon/index.html",
-      "size_mb": 48.76,
-      "date_added": "2026-06-22 16:15"
+      "size_mb": 37.16,
+      "date_added": "2026-06-24 09:14"
+    },
+    {
+      "slug": "bff-makeover---spa-dress-up",
+      "name": "BFF Makeover - Spa & Dress Up",
+      "thumbnail": "/games/bff-makeover---spa-dress-up/thumbnail.jpg",
+      "url": "/games/bff-makeover---spa-dress-up/index.html",
+      "size_mb": 67.13,
+      "date_added": "2026-06-24 09:19"
+    },
+    {
+      "slug": "kiki-world",
+      "name": "KiKi World",
+      "thumbnail": "/games/kiki-world/thumbnail.jpg",
+      "url": "/games/kiki-world/index.html",
+      "size_mb": 55.24,
+      "date_added": "2026-06-24 09:22"
     }
   ]
 }
